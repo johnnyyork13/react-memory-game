@@ -1,14 +1,16 @@
 import './App.css';
 import React from 'react';
+import Header from './components/Header'
 import Card from './components/Card'
 
 function App() {
+  console.log('App called');
 
   const [pokeList, setPokeList] = React.useState([]);
 
   React.useEffect(() => {
     const loadCards = async () => {
-      fetchPokemon(handleFetchSuccess);
+      fetchPokemon(shuffleArray);
     }
 
     loadCards()
@@ -18,12 +20,15 @@ function App() {
     console.log(pokeList);
   }
 
-  function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
+  function shuffleArray() {
+    console.log('shuffled');
+    setPokeList((pokeList) => {
+      for (let i = pokeList.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pokeList[i], pokeList[j]] = [pokeList[j], pokeList[i]];
+      }
+      return pokeList;
+    })
   }
   
   async function fetchPokemon(resolve, reject) {
@@ -31,26 +36,26 @@ function App() {
       for (let i = 554; i < 584; i++) {
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`)
         const pokemon = await response.json()
-        console.log(pokemon);
-        pokeList.push({name: pokemon.name, sprite: pokemon.sprites.front_default, clicked: false}); 
+        setPokeList((old) => ([
+            ...old,
+            {
+              name: pokemon.name,
+              sprite: pokemon.sprites.front_default,
+              clicked: false 
+            }
+          ]))
       }
       resolve(pokeList);
   }
   
-  function handleFetchSuccess(pokeList) {
-    setPokeList(function() {
-      return shuffleArray(pokeList);
-    });
-  }
-  
   const cards = pokeList.map(function(pokemon, index) {
     let card;
+    console.log('rendered');
     if (index < 9) {
       card = (<Card 
         key={index}
         name={pokemon.name}
         sprite={pokemon.sprite}
-        clicked={pokemon.clicked}
       />)
     }
     return card;
@@ -58,10 +63,12 @@ function App() {
 
   return (
     <div className="main-container">
+      <Header />
       <div className="card-container">
         {cards}
       </div>
       <button onClick={checkList}>Check</button>
+      <button onClick={() => shuffleArray(pokeList)}>Shuffle</button>
     </div>
   );
 }

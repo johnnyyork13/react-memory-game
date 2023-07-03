@@ -1,76 +1,71 @@
 import './App.css';
 import React from 'react';
-import Header from './components/Header'
-import Card from './components/Card'
+import Header from './components/Header';
+import CardGrid from './components/CardGrid';
+import Restart from './components/Restart';
+import PokeLogo from './components/PokeLogo';
 
-function App() {
-  console.log('App called');
+export default function App() {
 
-  const [pokeList, setPokeList] = React.useState([]);
+  const [gameSettings, setGameSettings] = React.useState({
+    isGameover: false,
+    score: 0,
+    prevScore: 0,
+    endText: ``
+  });
 
-  React.useEffect(() => {
-    const loadCards = async () => {
-      fetchPokemon(shuffleArray);
+  function endGame() {
+    setGameSettings((oldSettings) => ({
+      ...oldSettings,
+      isGameover: true,
+      prevScore: oldSettings.score,
+      endText: `Your score was ${oldSettings.score}`
+    }));
+  }
+
+  function increaseScore() {
+    setGameSettings((oldSettings) => ({
+      ...oldSettings,
+      score: oldSettings.score + 1
+    }))
+    if (gameSettings.score === 20) {
+      setGameSettings((oldSettings) => ({
+        ...oldSettings,
+        endText: 'You win! Congratulations!'
+      }))
     }
-
-    loadCards()
-  }, [])
-
-  function checkList() {
-    console.log(pokeList);
   }
 
-  function shuffleArray() {
-    console.log('shuffled');
-    setPokeList((pokeList) => {
-      for (let i = pokeList.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [pokeList[i], pokeList[j]] = [pokeList[j], pokeList[i]];
-      }
-      return pokeList;
-    })
+  function restartGame() {
+    setGameSettings((oldSettings) => ({
+      ...oldSettings, 
+      score: 0,
+      isGameover: false,
+      endText: ''
+    }))
   }
-  
-  async function fetchPokemon(resolve, reject) {
-      let pokeList = [];
-      for (let i = 554; i < 584; i++) {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`)
-        const pokemon = await response.json()
-        setPokeList((old) => ([
-            ...old,
-            {
-              name: pokemon.name,
-              sprite: pokemon.sprites.front_default,
-              clicked: false 
-            }
-          ]))
-      }
-      resolve(pokeList);
-  }
-  
-  const cards = pokeList.map(function(pokemon, index) {
-    let card;
-    console.log('rendered');
-    if (index < 9) {
-      card = (<Card 
-        key={index}
-        name={pokemon.name}
-        sprite={pokemon.sprite}
-      />)
-    }
-    return card;
-  })
 
   return (
     <div className="main-container">
-      <Header />
-      <div className="card-container">
-        {cards}
-      </div>
-      <button onClick={checkList}>Check</button>
-      <button onClick={() => shuffleArray(pokeList)}>Shuffle</button>
+      {gameSettings.isGameover && <Restart 
+        score={gameSettings.score}
+        restartGame={restartGame}
+        endText={gameSettings.endText}
+      />}
+      <Header 
+        score={gameSettings.score}
+        prevScore={gameSettings.prevScore}
+      />
+      <CardGrid 
+        checkGameover={gameSettings.isGameover}
+        isGameover={endGame}
+        increaseScore={increaseScore}
+      />
+      <PokeLogo left={40} top={20} />
+      <PokeLogo left={20} top={20} width={150}/>
+      <PokeLogo left={10} top={50} width={240}/>
+      <PokeLogo left={80} top={30} width={220}/>
+      <PokeLogo left={80} top={70} width={150}/>
     </div>
-  );
+  )
 }
-
-export default App;

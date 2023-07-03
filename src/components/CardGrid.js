@@ -2,11 +2,14 @@ import React from 'react';
 import Card from './Card';
 import shuffleArray from '../utilities/shuffle';
 import fetchPokemon from '../utilities/fetchPokemon';
-import showTenCards from '../utilities/showTenCards';
+import showNineCards from '../utilities/showNineCards';
+import checkClicked from '../utilities/checkClicked';
 
 export default function CardGrid(props) {
-    
+
     const [cardList, setCardList] = React.useState([]);
+
+    const [shuffle, setShuffle] = React.useState(false);
 
     React.useEffect(() => {
         const pokeData = fetchPokemon();
@@ -43,7 +46,7 @@ export default function CardGrid(props) {
         
     }
 
-    const mappedCards = () => {
+    function mappedCards() {
         const cards = [];
         for (const card in cardList) {
             cards.push(
@@ -56,13 +59,22 @@ export default function CardGrid(props) {
         }
 
         shuffleArray(cards);
-        let tenCards = showTenCards(cards);
-        return tenCards;
+        let nineCards = showNineCards(cards);
+        
+        return nineCards;
     }
 
+    let nextNineCards = mappedCards();
+    let checked = checkClicked(nextNineCards);
+
+    React.useEffect(() => {
+        setShuffle(checked);
+    }, [checked, nextNineCards])
+    
     return(
         <div className="card-grid-container">
-            {mappedCards()}
+            {nextNineCards}
+            <button type="button" onClick={() => console.log(cardList)}>Shuffle</button>
         </div>
     )
 }

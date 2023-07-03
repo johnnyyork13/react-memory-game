@@ -11,7 +11,7 @@ export default function App() {
     isGameover: false,
     score: 0,
     prevScore: 0,
-    endText: ``
+    endText: ''
   });
 
   function endGame() {
@@ -19,7 +19,6 @@ export default function App() {
       ...oldSettings,
       isGameover: true,
       prevScore: oldSettings.score,
-      endText: `Your score was ${oldSettings.score}`
     }));
   }
 
@@ -32,6 +31,12 @@ export default function App() {
       setGameSettings((oldSettings) => ({
         ...oldSettings,
         endText: 'You win! Congratulations!'
+      }))
+      endGame();
+    } else {
+      setGameSettings((oldSettings) => ({
+        ...oldSettings,
+        endText: `Your score was ${oldSettings.score}`
       }))
     }
   }

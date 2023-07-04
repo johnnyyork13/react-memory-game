@@ -27,7 +27,8 @@ export default function App() {
       ...oldSettings,
       score: oldSettings.score + 1
     }))
-    if (gameSettings.score === 20) {
+    console.log('app score', gameSettings.score);
+    if (gameSettings.score === 15) {
       setGameSettings((oldSettings) => ({
         ...oldSettings,
         endText: 'You win! Congratulations!'
@@ -50,6 +51,8 @@ export default function App() {
     }))
   }
 
+  console.log('before return score', gameSettings.score);
+
   return (
     <div className="main-container">
       {gameSettings.isGameover && <Restart 
@@ -65,6 +68,7 @@ export default function App() {
         checkGameover={gameSettings.isGameover}
         isGameover={endGame}
         increaseScore={increaseScore}
+        score={gameSettings.score}
       />
       <PokeLogo left={40} top={20} />
       <PokeLogo left={20} top={20} width={150}/>

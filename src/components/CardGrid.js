@@ -26,6 +26,9 @@ export default function CardGrid(props) {
             props.isGameover();
         } else {
             props.increaseScore();
+            if (props.score === 15) {
+                props.isGameover();
+            }
             setCardList(function(oldList) {
                 let newList = [];
                 for (const cards in oldList) {
@@ -70,7 +73,7 @@ export default function CardGrid(props) {
     React.useEffect(() => {
         setShuffle(checked);
     }, [checked, nextNineCards])
-    
+
     return(
         <div className="card-grid-container">
             {nextNineCards}

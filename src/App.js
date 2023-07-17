@@ -51,8 +51,6 @@ export default function App() {
     }))
   }
 
-  console.log('before return score', gameSettings.score);
-
   return (
     <div className="main-container">
       {gameSettings.isGameover && <Restart 

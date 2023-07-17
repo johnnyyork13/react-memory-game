@@ -6,7 +6,8 @@ export default function PokeLogo(props) {
         height: `${props.width}px`,
         position: 'absolute',
         left: `${props.left}%`,
-        top: `${props.top}%`
+        top: `${props.top}%`,
+        opacity: 0.4
     }
 
     return (

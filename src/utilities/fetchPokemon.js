@@ -1,9 +1,10 @@
 export default async function fetchPokemon() {
     try {
-        const amount = 753;
+        const start = 1; //needs at least 16 difference
+        const end = 17;
         let index = 0;
         let allPokemon = [];
-        for (let i = 737; i < amount; i++) {
+        for (let i = start; i < end; i++) {
             const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
             const res = await fetch(url);
             const pokeData = await res.json();

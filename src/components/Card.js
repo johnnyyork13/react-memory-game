@@ -7,7 +7,7 @@ export default function Card(props) {
     }
 
     return (
-        <div style={style}className="card" onClick={() => props.handleClick(props.index)}>
+        <div className="card" onClick={() => props.handleClick(props.index)}>
             <img src={props.sprite} alt="Pokemon" />
         </div>
     )
